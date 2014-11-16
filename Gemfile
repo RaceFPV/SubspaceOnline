@@ -17,7 +17,7 @@ gem 'bootstrap-sass'
 #for nice icons
 gem 'font-awesome-rails'
 #for nice notifications
-gem 'toastr-rails'
+gem 'toastr-rails' #https://github.com/ict4g/toastr-rails-sass
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
