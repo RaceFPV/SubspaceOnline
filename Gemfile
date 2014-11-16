@@ -16,6 +16,8 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'bootstrap-sass'
 #for nice icons
 gem 'font-awesome-rails'
+#for nice notifications
+gem 'toastr-rails'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
