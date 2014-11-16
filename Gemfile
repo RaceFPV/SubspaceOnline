@@ -26,6 +26,8 @@ gem 'jquery-ui-rails'
 gem "paperclip", "~> 4.1"
 # user authentication
 gem 'devise'
+#guest users see: https://github.com/cbeer/devise-guests
+gem 'devise-guests'
 # Allows login and registering through Facebook
 gem 'omniauth-facebook'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
