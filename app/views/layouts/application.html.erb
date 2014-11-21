@@ -7,8 +7,9 @@
     <%= csrf_meta_tags %>
   </head>
   <body>
-    <p class="notice"><%= toastr.success(notice) %></p>
-    <p class="alert"><%= toastr.error(alert) %></p>
+    <% if notice or alert %>
+      <%= custom_bootstrap_flash %>
+    <% end %>
     <%= yield %>
   </body>
 </html>
