@@ -15,4 +15,5 @@
 //= require bootstrap-sprockets
 //= require turbolinks
 //= require phaser
-//= require_tree .
+//= require toastr
+//= require home
