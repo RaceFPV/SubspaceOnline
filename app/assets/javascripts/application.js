@@ -14,6 +14,6 @@
 //= require jquery_ujs
 //= require bootstrap-sprockets
 //= require turbolinks
-//= require phaser
+//= require phaser.min
 //= require toastr
 //= require home
