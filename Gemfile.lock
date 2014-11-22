@@ -127,6 +127,8 @@ GEM
       cocaine (~> 0.5.3)
       mime-types
     pg (0.17.1)
+    phaser-rails (2.1.3.0)
+      railties (~> 4.0)
     polyglot (0.3.5)
     puma (2.9.2)
       rack (>= 1.1, < 2.0)
@@ -222,8 +224,6 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
-    toastr-rails (1.0.3)
-      railties (>= 3.1.0)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -257,6 +257,7 @@ DEPENDENCIES
   omniauth-facebook
   paperclip (~> 4.1)
   pg
+  phaser-rails
   puma
   quiet_assets
   rails (= 4.1.5)
@@ -269,6 +270,5 @@ DEPENDENCIES
   smusher
   sqlite3
   therubyracer
-  toastr-rails
   turbolinks
   uglifier (>= 1.3.0)

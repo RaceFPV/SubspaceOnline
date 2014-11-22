@@ -22,6 +22,9 @@ gem 'jquery-rails'
 gem 'jquery-turbolinks'
 gem 'jquery-ui-rails'
 
+#main game platform phaser.io
+gem 'phaser-rails'
+
 #image uploading
 gem "paperclip", "~> 4.1"
 # user authentication
