@@ -1,16 +1,20 @@
 class MessagesController < ApplicationController
-
   include ActionController::Live
+
+  def index
+    @messages = Message.all
+  end
 
 def create
   response.headers["Content-Type"] = "text/javascript"
   attributes = params.require(:message).permit(:content, :name)
-  @message = Message.create(attributes)
+  @message = Message.create!(attributes)
   $redis.publish('messages.create', @message.to_json)
 end
 
 def events
   response.headers["Content-Type"] = "text/event-stream"
+  start = Time.zone.now
   redis = Redis.new
   redis.psubscribe('messages.*') do |on|
     on.pmessage do |pattern, event, data|

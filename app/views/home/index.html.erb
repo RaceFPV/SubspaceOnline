@@ -1,2 +1,16 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
+<div class="row">
+  <div class="col-sm-9" id="gamescreen" style="width: 100%"></div>
+<script>
+  <%= render partial: 'game.js.erb' %>
+</script>
+  <div class="col-sm-3">
+    <ul id="chat">
+      <%= render @messages %>
+    </ul>
+    <%= form_for Message.new, url: home_index_path, method: 'post', remote: true do |f| %>
+      <%= f.text_field :name, placeholder: "Name" %>
+      <%= f.text_field :content %>
+      <%= f.submit "Send" %>
+    <% end %>
+  </div>
+</div>
