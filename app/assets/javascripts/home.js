@@ -3,7 +3,6 @@
 
   source.addEventListener('home.create', function(e) {
     var message;
-    message = $.parseJSON(e.data).message;
-    $('#chat').append("OMG");
+    message = $.parseJSON(e.data);
     return $('#chat').append($('<li>').text("" + message.name + ": " + message.content));
   });
