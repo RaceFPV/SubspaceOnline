@@ -43,6 +43,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 #for live stuff
 gem 'puma'
 gem 'redis'
+gem 'tubesock'
 
 group :development do 
   gem 'quiet_assets' # Turns off the Rails asset pipeline log

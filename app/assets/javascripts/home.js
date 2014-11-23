@@ -1,3 +1,4 @@
+$(function() {
   var source;
   source = new EventSource('/home/events');
 
@@ -6,3 +7,4 @@
     message = $.parseJSON(e.data);
     return $('#chat').append($('<li>').text("" + message.name + ": " + message.content));
   });
+});
