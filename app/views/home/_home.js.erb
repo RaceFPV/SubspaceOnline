@@ -4,8 +4,8 @@ $(function() {
   socket.onmessage = function(event) {
     if (event.data.length) {
       $("#chat").append("" + event.data + "<br>");
-      update(event.data);
-      return render();
+      "event.data";
+      return update();
     }
   };
 
@@ -14,7 +14,8 @@ $("body").keydown(function(e) {
     var $input2;
   if(e.keyCode == 37) { // left
     //  Move to the left
-    $input = player.body.velocity.x = -150;
+player.body.velocity.x = -150;
+    $input = player.body.velocity.x;
     $input2 = player.animations.play('left');
     socket.send($input);
     socket.send($input2);
