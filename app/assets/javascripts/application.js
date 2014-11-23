@@ -16,4 +16,3 @@
 //= require turbolinks
 //= require phaser.min
 //= require toastr
-//= require home

@@ -1,32 +1,40 @@
 class HomeController < ApplicationController
   include ActionController::Live
+  include Tubesock::Hijack
 
   def index
     @messages = Message.all
   end
 
 def create
-  response.headers["Content-Type"] = "text/javascript"
-  attributes = params.require(:message).permit(:content, :name)
-  @message = Message.create!(attributes)
-  puts "created #{@message.content}"
-  $redis.publish('home.create', @message.to_json)
-  puts "published #{@message.to_json}"
+  @message = Message.new
+  @message.content = params[:message][:content]
+  @message.name = current_or_guest_player.email
+  @message.save!
+  return render :nothing => true
 end
 
- def events
-response.headers["Content-Type"] = "text/event-stream"
-redis = Redis.new
-redis.psubscribe('home.*') do |on|
-on.pmessage do |pattern, event, data|
-response.stream.write("event: #{event}\n")
-response.stream.write("data: #{data}\n\n")
+ def chat
+hijack do |tubesock|
+# Listen on its own thread
+redis_thread = Thread.new do
+# Needs its own redis connection to pub
+# and sub at the same time
+Redis.new.subscribe "chat" do |on|
+on.message do |channel, message|
+tubesock.send_data message
 end
 end
-rescue IOError
-logger.info "Stream closed"
-ensure
-redis.quit
-response.stream.close
+end
+tubesock.onmessage do |m|
+# pub the message when we get one
+# note: this echoes through the sub above
+Redis.new.publish "chat", m
+end
+tubesock.onclose do
+# stop listening when client leaves
+redis_thread.kill
+end
+end
 end
 end

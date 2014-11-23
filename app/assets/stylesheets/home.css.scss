@@ -9,3 +9,9 @@ main {
 .navbar {
   height: 75px;
 }
+
+#chat {
+  max-height: 350px;
+  overflow-y: auto;
+}
+

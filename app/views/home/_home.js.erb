@@ -1,0 +1,38 @@
+$(function() {
+  var socket;
+  socket = new WebSocket("ws://" + window.location.host + "/chat");
+  socket.onmessage = function(event) {
+    if (event.data.length) {
+      $("#chat").append("" + event.data + "<br>");
+      update(event.data);
+      return render();
+    }
+  };
+
+$("body").keydown(function(e) {
+    var $input;
+    var $input2;
+  if(e.keyCode == 37) { // left
+    //  Move to the left
+    $input = player.body.velocity.x = -150;
+    $input2 = player.animations.play('left');
+    socket.send($input);
+    socket.send($input2);
+  }
+  else if(e.keyCode == 39) { // right
+    //  Move to the left
+    $input = player.body.velocity.x = 150;
+    $input2 = player.animations.play('right');
+    socket.send($input);
+    socket.send($input2);
+  }
+});
+
+  return $("#chatform").on("submit", function(event) {
+    var $input;
+    event.preventDefault();
+    $input = $(this).find("#message_content");
+    socket.send($input.val());
+    return $input.val(null);
+  });
+});

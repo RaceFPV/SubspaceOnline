@@ -1,0 +1,18 @@
+$("#chatform")[0].reset();
+$(function() {
+  var socket;
+  socket = new WebSocket("ws://" + window.location.host + "/chat");
+  socket.onmessage = function(event) {
+    if (event.data.length) {
+      return event.data;
+    }
+  };
+    var $input;
+    var $input2;
+$input = $("#chat").append("<br>");
+$input2 = socket.send(document.getElementById('chat').scrollTop = 9999999);
+socket.send($input);
+socket.send($input2);
+    $input.val(null);
+    return $input2.val(null);
+});
