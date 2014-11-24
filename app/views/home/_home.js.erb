@@ -3,10 +3,23 @@ $(function() {
   socket = new WebSocket("ws://" + window.location.host + "/chat");
   socket.onmessage = function(event) {
     if (event.data.length) {
-      $("#chat").append("" + event.data + "<br>");
-      document.getElementById('chat').scrollTop = 9999999;
-      update(event.data);
-      return update();
+      if (event.data === "left") {
+        player.body.velocity.x = -150;
+        player.animations.play('left');
+      }
+      else if (event.data === "right") {
+        player.body.velocity.x = 150;
+        player.animations.play('right');
+      }
+      else if (event.data === "up") {
+        if (player.body.touching.down) {
+          player.body.velocity.y = -350;
+        }
+      }
+      else {
+        $("#chat").append("" + event.data + "<br>");
+        document.getElementById('chat').scrollTop = 9999999;
+      }
     }
   };
 
@@ -15,18 +28,15 @@ $("body").keydown(function(e) {
     var $input2;
   if(e.keyCode == 37) { // left
     //  Move to the left
-player.body.velocity.x = -150;
-    $input = player.body.velocity.x;
-    //$input2 = player.animations.play('left');
-    socket.send($input);
-    //socket.send($input2);
+    socket.send("left");
   }
   else if(e.keyCode == 39) { // right
-    //  Move to the left
-    $input = player.body.velocity.x = 150;
-    //$input2 = player.animations.play('right');
-    socket.send($input);
-    //socket.send($input2);
+    //  Move to the right
+    socket.send("right");
+  }
+  else if(e.keyCode == 38) { // up
+    //  Move up
+    socket.send("up");
   }
 });
 
