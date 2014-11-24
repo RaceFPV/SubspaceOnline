@@ -6,7 +6,9 @@
 </script>
   <div class="col-sm-3">
     <ul id="chat">
-      <%= render @messages %>
+      <% @messages.each do |x| %>
+        <li><%= x.name %> : <%= x.content %></li>
+      <% end %>
     </ul>
     <%= form_for :message, url: home_index_path, method: 'post', html: {id: 'chatform'}, remote: true do |f| %>
       <%= f.text_field :content %>

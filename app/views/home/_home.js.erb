@@ -3,22 +3,20 @@ $(function() {
   socket = new WebSocket("ws://" + window.location.host + "/chat");
   socket.onmessage = function(event) {
     if (event.data.length) {
-      if (event.data === "left") {
-        player.body.velocity.x = -150;
-        player.animations.play('left');
-      }
-      else if (event.data === "right") {
-        player.body.velocity.x = 150;
-        player.animations.play('right');
-      }
-      else if (event.data === "up") {
-        if (player.body.touching.down) {
-          player.body.velocity.y = -350;
-        }
-      }
-      else {
-        $("#chat").append("" + event.data + "<br>");
-        document.getElementById('chat').scrollTop = 9999999;
+      switch (event.data) {
+        case "left":
+          movementSystem(event.data)
+          break;
+        case "right":
+          movementSystem(event.data)
+          break;
+        case "up":
+            movementSystem(event.data)
+            break;
+        default:
+          $("#chat").append("<%= current_or_guest_player.email %> : " + event.data + "<br>");
+          document.getElementById('chat').scrollTop = 9999999;
+          break;
       }
     }
   };
