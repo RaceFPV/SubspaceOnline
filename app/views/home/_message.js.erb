@@ -4,7 +4,7 @@ $(function() {
   socket = new WebSocket("ws://" + window.location.host + "/chat");
   socket.onmessage = function(event) {
     if (event.data.length) {
-      return event.data;
+      return moveplayer(event.data);
     }
   };
     var $input;

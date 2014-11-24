@@ -4,7 +4,8 @@ $(function() {
   socket.onmessage = function(event) {
     if (event.data.length) {
       $("#chat").append("" + event.data + "<br>");
-      "event.data";
+      document.getElementById('chat').scrollTop = 9999999;
+      update(event.data);
       return update();
     }
   };
@@ -16,16 +17,16 @@ $("body").keydown(function(e) {
     //  Move to the left
 player.body.velocity.x = -150;
     $input = player.body.velocity.x;
-    $input2 = player.animations.play('left');
+    //$input2 = player.animations.play('left');
     socket.send($input);
-    socket.send($input2);
+    //socket.send($input2);
   }
   else if(e.keyCode == 39) { // right
     //  Move to the left
     $input = player.body.velocity.x = 150;
-    $input2 = player.animations.play('right');
+    //$input2 = player.animations.play('right');
     socket.send($input);
-    socket.send($input2);
+    //socket.send($input2);
   }
 });
 
