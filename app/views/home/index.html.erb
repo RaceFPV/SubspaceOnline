@@ -1,10 +1,10 @@
 <div class="row">
-  <div class="col-sm-9" id="gamescreen" style="width: 100%"></div>
+  <div class="col-xs-9" id="gamescreen"></div>
 <script>
   <%= render partial: 'game.js.erb' %>
   <%= render partial: 'home.js.erb' %>
 </script>
-  <div class="col-sm-3">
+  <div class="col-xs-3">
     <ul id="chat">
       <% @messages.each do |x| %>
         <li><%= x.name %> : <%= x.content %></li>

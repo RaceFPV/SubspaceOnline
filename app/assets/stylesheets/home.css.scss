@@ -11,7 +11,11 @@ main {
 }
 
 #chat {
-  max-height: 350px;
+  height: 85vh;
   overflow-y: auto;
+}
+
+#gamescreen {
+  height: 92vh;
 }
 
