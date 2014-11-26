@@ -1,6 +1,6 @@
 $(function() {
   var socket;
-  socket = new WebSocket("ws://" + window.location.host + "/chat");
+  socket = new WebSocket("ws://" + window.location.host + "/movement");
   socket.onmessage = function(event) {
     if (event.data.length) {
       switch (event.data) {
