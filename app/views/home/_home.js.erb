@@ -11,8 +11,17 @@ $(function() {
           movementSystem(event.data)
           break;
         case "up":
-            movementSystem(event.data)
-            break;
+          movementSystem(event.data)
+          break;
+        case "leftend":
+          movementSystem(event.data)
+          break;
+        case "rightend":
+          movementSystem(event.data)
+          break;
+        case "upend":
+          movementSystem(event.data)
+          break;
         default:
           $("#chat").append("<%= current_or_guest_player.email %> : " + event.data + "<br>");
           document.getElementById('chat').scrollTop = 9999999;
@@ -22,8 +31,6 @@ $(function() {
   };
 
 $("body").keydown(function(e) {
-    var $input;
-    var $input2;
   if(e.keyCode == 37) { // left
     //  Move to the left
     socket.send("left");
@@ -35,6 +42,21 @@ $("body").keydown(function(e) {
   else if(e.keyCode == 38) { // up
     //  Move up
     socket.send("up");
+  }
+});
+
+$("body").keyup(function(e) {
+  if(e.keyCode == 37) { // left
+    //  Move to the left
+    socket.send("leftend");
+  }
+  else if(e.keyCode == 39) { // right
+    //  Move to the right
+    socket.send("rightend");
+  }
+  else if(e.keyCode == 38) { // up
+    //  Move up
+    socket.send("upend");
   }
 });
 
