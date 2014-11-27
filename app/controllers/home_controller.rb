@@ -1,11 +1,14 @@
 class HomeController < ApplicationController
   include ActionController::Live
   include Tubesock::Hijack
+  @@players = []
 
   def index
     @messages = Message.all
     #try and get players subscribed, not yet working
     #@players = $redis.smembers('joined')
+    @@players += [current_or_guest_player.email]
+    @players = @@players
   end
 
 def create
