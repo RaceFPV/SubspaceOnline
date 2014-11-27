@@ -4,6 +4,8 @@ class HomeController < ApplicationController
 
   def index
     @messages = Message.all
+    #try and get players subscribed, not yet working
+    #@players = $redis.smembers('joined')
   end
 
 def create
