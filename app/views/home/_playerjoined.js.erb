@@ -1,18 +1,25 @@
-$(function() {
+$(function () {
   var socket;
   socket = new WebSocket("ws://" + window.location.host + "/joined");
   socket.onmessage = function(event) {
     if (event.data.length) {
-      $("#chat").append("<%= current_or_guest_player.email %> : " + event.data + "<br>");
-      document.getElementById('chat').scrollTop = 9999999;
+     if ( event.data.charAt( 0 ) == 'j' ) {
+      var string = event.data+' has connected';
+      string = string.substring(1);
+      toastr.success(string);
     }
+     else if ( event.data.charAt( 0 ) == 'l' ) {
+      var string = event.data+' has disconnected';
+      string = string.substring(1);
+      toastr.error(string);
+    }
+  }
   };
+  $( window ).load(function() {
+    socket.send('j<%= truncate(current_or_guest_player.email, length: 15) %>');
+  });
 
-  return $("#chatform").on("submit", function(event) {
-    var $input;
-    event.preventDefault();
-    $input = $(this).find("#message_content");
-    socket.send($input.val());
-    return $input.val(null);
+  window.onunload = window.onbeforeunload = (function(){
+    socket.send('l<%= truncate(current_or_guest_player.email, length: 15) %>');
   });
 });
