@@ -3,6 +3,6 @@ Rails.application.routes.draw do
   get '/chat' => 'home#chat'
   get '/movement' => 'home#movement'
   get '/joined' => 'home#joined'
-  devise_for :players
+  devise_for :players, controllers: { sessions: "player/sessions" }
   root 'home#index'
 end
