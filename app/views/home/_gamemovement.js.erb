@@ -1,70 +1,47 @@
 $(function() {
   var socket;
+  var myid = '<%= current_or_guest_player.email%>';
   socket = new WebSocket("ws://" + window.location.host + "/movement");
   socket.onmessage = function(event) {
     if (event.data.length) {
-      switch (event.data) {
-        case "left":
-          movementSystem(event.data)
-          break;
-        case "right":
-          movementSystem(event.data)
-          break;
-        case "up":
-          movementSystem(event.data)
-          break;
-        case "leftend":
-          movementSystem(event.data)
-          break;
-        case "rightend":
-          movementSystem(event.data)
-          break;
-        case "upend":
-          movementSystem(event.data)
-          break;
-        default:
-          $("#chat").append("<%= current_or_guest_player.email %> : " + event.data + "<br>");
-          document.getElementById('chat').scrollTop = 9999999;
-          break;
-      }
+     if ( event.data.charAt( 0 ) == 'l' ) {
+         goleft(event.data.substring(1));
+        }
+     if ( event.data.charAt( 0 ) == 'r' ) {
+         goright(event.data.substring(1));
+        }
+     if ( event.data.charAt( 0 ) == 'u' ) {
+         goup(event.data.substring(1));
+        }
+     if ( event.data.charAt( 0 ) == 'd' ) {
+         godown(event.data.substring(1));
+        }
+     if ( event.data.charAt( 0 ) == 's' ) {
+         shoot(event.data.substring(1));
+        }
     }
   };
 
 $("body").keydown(function(e) {
   if(e.keyCode == 37) { // left
     //  Move to the left
-    socket.send("left");
+    socket.send("l<%= current_or_guest_player.email%>");
   }
   else if(e.keyCode == 39) { // right
     //  Move to the right
-    socket.send("right");
+    socket.send("r<%= current_or_guest_player.email%>");
   }
   else if(e.keyCode == 38) { // up
     //  Move up
-    socket.send("up");
+    socket.send("u<%= current_or_guest_player.email%>");
+  }
+  else if(e.keyCode == 40) { // down
+    //  Move down
+    socket.send("d<%= current_or_guest_player.email%>");
+  }
+  else if(e.keyCode == 32) { // shoot
+    //  shoot
+    socket.send("s<%= current_or_guest_player.email%>");
   }
 });
-
-$("body").keyup(function(e) {
-  if(e.keyCode == 37) { // left
-    //  Move to the left
-    socket.send("leftend");
-  }
-  else if(e.keyCode == 39) { // right
-    //  Move to the right
-    socket.send("rightend");
-  }
-  else if(e.keyCode == 38) { // up
-    //  Move up
-    socket.send("upend");
-  }
-});
-
-  return $("#chatform").on("submit", function(event) {
-    var $input;
-    event.preventDefault();
-    $input = $(this).find("#message_content");
-    socket.send($input.val());
-    return $input.val(null);
-  });
 });

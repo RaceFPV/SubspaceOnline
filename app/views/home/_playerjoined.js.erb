@@ -13,13 +13,21 @@ $(function () {
       string = string.substring(1);
       toastr.error(string);
     }
+    else if (event.data.charAt(0) == 's') {
+      spawnEnemy(event.data);
+    }
+    else if (event.data.charAt(0) == 'd') {
+      killMe(event.data);
+    }
   }
   };
-  $( window ).load(function() {
-    socket.send('j<%= truncate(current_or_guest_player.email, length: 15) %>');
-  });
+    setTimeout(function(){
+      socket.send('j<%= truncate(current_or_guest_player.email, length: 15) %>');
+      socket.send('s<%= current_or_guest_player.email%>');
+    },3000);
 
   window.onunload = window.onbeforeunload = (function(){
     socket.send('l<%= truncate(current_or_guest_player.email, length: 15) %>');
+    socket.send('d<%= current_or_guest_player.email%>');
   });
 });
