@@ -42,6 +42,10 @@ var killMe = function(i) {
 	      tanksList[i].shadow.kill();
 }
 
+var hitme = function(i) {
+      tanksList[i].health -= 1;
+}
+
 var goleft = function(i) {
     tanksList[i].tank.x -= 5;
     tanksList[i].turret.x -= 5;
@@ -104,6 +108,7 @@ Tank = function (index) {
     this.game = game;
     this.health = 30;
     this.player = player;
+    this.points = 0;
     this.bullets = game.add.group();
     this.bullets.enableBody = true;
     this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
@@ -224,10 +229,6 @@ Tank.prototype.kill = function() {
 	this.shadow.kill();
 }
 
-// end player join/leave code
-
-
-
 
 function create () {
 
@@ -239,7 +240,13 @@ function create () {
     land = game.add.tileSprite(0, 0, 800, 600, 'earth');
     land.fixedToCamera = true;
     
-	
+	  // create our score text in the top left corner
+  text = game.add.text(game.camera.x,game.camera.y, "Score: 0", {
+        font: "24px Arial",
+        fill: "#ff0044",
+        align: "center"
+    });
+
 	player = new Tank(myId);
 	tanksList[myId] = player;
 	tank = player.tank;
@@ -272,17 +279,38 @@ function create () {
 }
 
   function update() {
+  // make the score text always follow where the camera is
+  text.x = game.camera.x;
+  text.y = game.camera.y;
+  text.setText("Health:" + tanksList[myId].health);
+
 	player.input.tx = game.input.x+ game.camera.x;
 	player.input.ty = game.input.y+ game.camera.y;
 
-turret.rotation = game.physics.arcade.angleToPointer(turret);	
+    turret.rotation = game.physics.arcade.angleToPointer(turret);	
     land.tilePosition.x = -game.camera.x;
     land.tilePosition.y = -game.camera.y;
+                           
+    for (var i in tanksList) {
+		  if (!tanksList[i]) continue;
+		  var curBullets = tanksList[i].bullets;
+	  	var curTank = tanksList[i].tank;
+		  for (var j in tanksList) {
+			  if (!tanksList[j]) continue;
+			  if (j!=i) {
+				  var targetTank = tanksList[j].tank;
+				  game.physics.arcade.overlap(curBullets, targetTank, bulletHitPlayer, null, this);
+		  	}
+			  if (tanksList[j].alive) {
+				  tanksList[j].update();
+			  }
+		}
+}
   }
                            
 function bulletHitPlayer (tank, bullet) {
-
     bullet.kill();
+    playerhit(tank.id);
 }
 
 function render () {}
