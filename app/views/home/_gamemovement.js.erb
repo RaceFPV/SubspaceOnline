@@ -29,6 +29,13 @@ $(function() {
     }
   };
 
+$( "#gamescreen" ).mousedown(function() {
+    //  shoot
+    socket.send("x"+(game.input.x+ game.camera.x));
+    socket.send("y"+(game.input.y+ game.camera.y));
+    socket.send("s<%= current_or_guest_player.email.gsub(/[^0-9A-Za-z]/, '')%>");
+});
+
 $("body").keydown(function(e) {
   if(e.keyCode == 37) { // left
     //  Move to the left
@@ -45,12 +52,6 @@ $("body").keydown(function(e) {
   else if(e.keyCode == 40) { // down
     //  Move down
     socket.send("d<%= current_or_guest_player.email.gsub(/[^0-9A-Za-z]/, '')%>");
-  }
-  else if(e.keyCode == 32) { // shoot
-    //  shoot
-    socket.send("x"+(game.input.x+ game.camera.x));
-    socket.send("y"+(game.input.y+ game.camera.y));
-    socket.send("s<%= current_or_guest_player.email.gsub(/[^0-9A-Za-z]/, '')%>");
   }
 });
 });
