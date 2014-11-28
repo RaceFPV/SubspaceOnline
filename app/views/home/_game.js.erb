@@ -1,4 +1,4 @@
-myId = '<%= current_or_guest_player.email %>';
+myId = '<%= current_or_guest_player.email.gsub(/[^0-9A-Za-z]/, '') %>';
 
 var land;
 
@@ -6,7 +6,7 @@ var shadow;
 var tank;
 var turret;
 var player;
-var tanksList = '<%= @players %>';
+var tanksList = {};
 var explosions;
 var enemy;
 
@@ -27,62 +27,63 @@ var shoot = "false";
 var clientSetup = function() {
 		//create() is moved here to make sure nothing is created before uniq id assignation
 		create();
+
+<% @players.uniq.each do |x| %>
+  spawnEnemy('<%= x %>');
+<% end %>
 }
 
-var spawnEnemy = function(i) {
-      if (i == myId) return; //this is me
-        console.log('SPAWN');
-        var tnk = new Tank(i);
-        tanksList[i] = tnk;
-        enemy = tnk;
-}
 
 var killMe = function(i) {
-      if (i == myId) return; //this is me
         console.log('KILL');
-	      this.alive = false;
-	      this.tank.kill();
-	      this.turret.kill();
-	      this.shadow.kill();
+	      tanksList[i].alive = false;
+	      tanksList[i].kill();
+	      tanksList[i].turret.kill();
+	      tanksList[i].shadow.kill();
 }
 
 var goleft = function(i) {
-  if (i == myId){
-    this.tank.body.velocity.x = -300;
-  }
-  else {
-    enemy.tank.body.velocity.x = -300;
-  }
+    tanksList[i].tank.x -= 5;
+    tanksList[i].turret.x -= 5;
+    tanksList[i].shadow.x -= 5;
   }
 var goright = function(i) {
-  if (i == myId){
-    this.tank.body.velocity.x = 300;
-  }
-  else {
-    enemy.tank.body.velocity.x = 300;
-  }
+    tanksList[i].tank.x += 5;
+    tanksList[i].turret.x += 5;
+    tanksList[i].shadow.x += 5;
   }
 var goup = function(i) {
-  if (i == myId){
-    this.tank.body.velocity.y = -300;
-  }
-  else {
-    enemy.tank.body.velocity.y = -300;
-  }
+  tanksList[i].tank.y -= 5;
+  tanksList[i].turret.y -= 5;
+  tanksList[i].shadow.y -= 5;
   }
 var godown = function(i) {
-  if (i == myId){
-    this.tank.body.velocity.y = 300;
+  tanksList[i].tank.y += 5;
+  tanksList[i].turret.y += 5;
+  tanksList[i].shadow.y += 5;
   }
-  else {
-    enemy.tank.body.velocity.y = 300;
+var shoot = function(i, playerx, playery) {
+   tanksList[i].fire({x:playerx, y:playery});
   }
-  }
+var turret = function(i) {
+  tanksList[i].turret.rotation
+}
 
 var width = $('#gamescreen').innerWidth() - 50;
 var height = $('#gamescreen').innerHeight();
 
 var game = new Phaser.Game(width, height, Phaser.AUTO, 'gamescreen', { preload: preload, create: clientSetup, update: update, render: render });
+
+
+function preload () {
+
+    game.load.atlas('tank', 'assets/tanks.png', 'assets/tanks.json');
+    game.load.atlas('enemy', 'assets/enemy-tanks.png', 'assets/tanks.json');
+    game.load.image('bullet', 'assets/bullet.png');
+    game.load.image('earth', 'assets/scorched_earth.png');
+    game.load.spritesheet('kaboom', 'assets/explosion.png', 64, 64, 23);
+    
+}
 
 // for when new players join and leave
 Tank = function (index) {
@@ -138,8 +139,16 @@ Tank = function (index) {
     this.tank.angle = 0;
 
     game.physics.arcade.velocityFromRotation(this.tank.rotation, 0, this.tank.body.velocity);
-
 };
+
+
+var spawnEnemy = function(i) {
+      if (i == myId) return; //this is me
+        console.log('SPAWN');
+        var tnk = new Tank(i);
+        tanksList[i] = tnk;
+}
+
 
 Tank.prototype.update = function() {
 	
@@ -191,9 +200,9 @@ Tank.prototype.update = function() {
             this.currentSpeed -= 4;
         }
     }
-    if (shoot == "true")
+    if (this.fire == true)
     {	
-		this.fire({x:this.cursor.tx, y:this.cursor.ty});
+		  this.fire({x:this.cursor.tx, y:this.cursor.ty});
     }
 	
     if (this.currentSpeed > 0)
@@ -239,16 +248,6 @@ Tank.prototype.kill = function() {
 
 
 
-function preload () {
-
-    game.load.atlas('tank', 'assets/tanks.png', 'assets/tanks.json');
-    game.load.atlas('enemy', 'assets/enemy-tanks.png', 'assets/tanks.json');
-    game.load.image('bullet', 'assets/bullet.png');
-    game.load.image('earth', 'assets/scorched_earth.png');
-    game.load.spritesheet('kaboom', 'assets/explosion.png', 64, 64, 23);
-    
-}
-
 function create () {
 
     //  Resize our game world to be a 2000 x 2000 square
@@ -259,9 +258,8 @@ function create () {
     land = game.add.tileSprite(0, 0, 800, 600, 'earth');
     land.fixedToCamera = true;
     
-    tanksList = {};
 	
-	player = new Tank(myId, game, tank);
+	player = new Tank(myId);
 	tanksList[myId] = player;
 	tank = player.tank;
 	turret = player.turret;
@@ -282,57 +280,23 @@ function create () {
 
     tank.bringToTop();
     turret.bringToTop();
-		
-    logo = game.add.sprite(0, 200, 'logo');
-    logo.fixedToCamera = true;
+    game.camera.focusOnXY(0, 0);
 
 
     game.camera.follow(tank);
     game.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
     game.camera.focusOnXY(0, 0);
 
-    cursors = game.input.keyboard.createCursorKeys();
-	
 	
 }
 
   function update() {
-	player.input.left = cursors.left.isDown;
-	player.input.right = cursors.right.isDown;
-	player.input.up = cursors.up.isDown;
-	player.input.fire = game.input.activePointer.isDown;
 	player.input.tx = game.input.x+ game.camera.x;
 	player.input.ty = game.input.y+ game.camera.y;
 
 turret.rotation = game.physics.arcade.angleToPointer(turret);	
     land.tilePosition.x = -game.camera.x;
     land.tilePosition.y = -game.camera.y;
-
-    	
-	
-    for (var i in tanksList)
-    {
-		if (!tanksList[i]) continue;
-		var curBullets = tanksList[i].bullets;
-		var curTank = tanksList[i].tank;
-		for (var j in tanksList)
-		{
-			if (!tanksList[j]) continue;
-			if (j!=i) 
-			{
-			
-				var targetTank = tanksList[j].tank;
-				
-				game.physics.arcade.overlap(curBullets, targetTank, bulletHitPlayer, null, this);
-			
-			}
-			if (tanksList[j].alive)
-			{
-				tanksList[j].update();
-			}			
-		}
-    }
-
   }
                            
 function bulletHitPlayer (tank, bullet) {

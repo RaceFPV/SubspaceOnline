@@ -4,10 +4,10 @@ class HomeController < ApplicationController
   @@players = []
 
   def index
-    @messages = Message.all
+    @messages = Message.all.order('created_at DESC').limit(50)
     #try and get players subscribed, not yet working
     #@players = $redis.smembers('joined')
-    @@players += [current_or_guest_player.email]
+    @@players += [current_or_guest_player.email.gsub(/[^0-9A-Za-z]/, '')]
     @players = @@players
   end
 
